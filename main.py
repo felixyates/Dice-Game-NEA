@@ -49,7 +49,7 @@ def auth(playerNumber):
               if passwordInput != p2Password:
                   passwordInput = input("Password incorrect. Please try again: ")
 
-def intro():
+def intro(): #test
   print("\nToday, you will compete for the title of dice rolling champion!")
   time.sleep(3)
   print("You will roll two dice at the start of each round, the total of which will be added to your score.")
