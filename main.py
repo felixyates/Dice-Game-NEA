@@ -49,7 +49,17 @@ def auth(playerNumber):
               if passwordInput != p2Password:
                   passwordInput = input("Password incorrect. Please try again: ")
 
-def intro():
+def tutorialQuestion():
+  print("\nWelcome to un-named dice rolling game!")
+  time.sleep(2)
+  answer = input("Would you like to go through the tutorial? (Y/N) ").upper()
+  
+  if answer == "Y" or "YES":
+    tutorial()
+  else:
+    print("Alright, on with the game!")
+
+def tutorial():
   print("\nToday, you will compete for the title of dice rolling champion!")
   time.sleep(3)
   print("You will roll two dice at the start of each round, the total of which will be added to your score.")
@@ -63,16 +73,6 @@ def intro():
   print("On with the game!")
   time.sleep(2)
 
-def introQuestion():
-  print("\nWelcome to un-named dice rolling game!")
-  time.sleep(2)
-  tutorialA = input("Would you like to go through the tutorial? Y/N ").upper()
-  
-  if tutorialA == "Y" or "YES":
-    intro()
-  else:
-    print("Alright, on with the game!")
-
 # MAIN CODE
 
 rounds = 0
@@ -83,7 +83,7 @@ p2Score = 0
 #auth(1) #MAKE SURE TO REMOVE THE TEMP. HASHTAGS
 #auth(2)
 
-introQuestion()
+tutorialQuestion()
 
 while rounds < 5:
 
