@@ -52,9 +52,9 @@ def auth(playerNumber):
 def tutorialQuestion():
   print("\nWelcome to un-named dice rolling game!")
   time.sleep(2)
-  answer = input("Would you like to go through the tutorial? (Y/N) ").upper()
+  answer = input("Would you like to go through the tutorial? (Y/N) ").lower()
   
-  if answer == "Y" or "YES":
+  if answer == ("y" or "yes"):
     tutorial()
   else:
     print("Alright, on with the game!")
@@ -80,14 +80,13 @@ tie = False
 p1Score = 0
 p2Score = 0
 
-#auth(1) #MAKE SURE TO REMOVE THE TEMP. HASHTAGS
-#auth(2)
-
+auth(1)
+auth(2)
 tutorialQuestion()
 
 while rounds < 5:
 
-## BEGINNING OF PLAYER 1
+## BEGINNING OF PLAYER 1 - MAKE INTO FUNCTION
 
     input("\nPlayer 1, you're up! Press ENTER to roll. ")
     diceSound()
