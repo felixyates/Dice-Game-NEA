@@ -12,9 +12,6 @@ def cheer():
 def music():
     audio.play_file("wiiParty.mp3",does_loop = True,volume=0.5)
 
-def diceSound():
-  audio.play_file("diceRoll.mp3",volume=0.3)
-
 def auth(playerNumber):
   p1Valid = False
   p2Valid = False
@@ -89,7 +86,6 @@ while rounds < 5:
 ## BEGINNING OF PLAYER 1 - MAKE INTO FUNCTION
 
     input("\nPlayer 1, you're up! Press ENTER to roll. ")
-    diceSound()
     dice1 = random.randint(1,6)
     dice2 = random.randint(1,6)
     print("\nYou rolled" ,str(dice1) ,"and" ,str(dice2) + ", meaning that" ,str(dice1+dice2) ,"was added to your score!")
@@ -112,7 +108,6 @@ while rounds < 5:
 ## BEGINNING OF PLAYER 2 - another function
 
     input("\nYour turn, Player 2! Press ENTER to roll. ")
-    diceSound()
     dice1 = random.randint(1,6)
     dice2 = random.randint(1,6)
     print("\nYou rolled" ,str(dice1) ,"and" ,str(dice2) + ", meaning that" ,str(dice1+dice2) ,"was added to your score!")
