@@ -104,6 +104,7 @@ def game():
     drumRoll()
     time.sleep(5)
     print(str(p2Score) + ".\n")
+    time.sleep(1)
     tieChk(p1Score,p2Score)
     if p1Score > p2Score:
         print("Congratulations Player 1, you won!\n")
@@ -182,7 +183,7 @@ def tieChk(p1Score,p2Score):
 
 # MAIN CODE
 
-#auth(1)
-#auth(2)
+auth(1)
+auth(2)
 tutorialQuestion()
 game()
