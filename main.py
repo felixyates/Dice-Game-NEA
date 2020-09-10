@@ -38,7 +38,6 @@ def auth(playerNumber):
           if (usernameInput == p2Username) and (passwordInput == p2Password):
               p2Valid = True
               print("Correct! On with the game :)")
-              music()
               break
           else:
               if usernameInput != p2Username:
@@ -47,6 +46,8 @@ def auth(playerNumber):
                   passwordInput = input("Password incorrect. Please try again: ")
 
 def tutorialQuestion():
+  music()
+  time.sleep(2)
   print("\nWelcome to un-named dice rolling game!")
   time.sleep(2)
   answer = input("Would you like to go through the tutorial? (Y/N) ").lower()
@@ -55,6 +56,7 @@ def tutorialQuestion():
     tutorial()
   else:
     print("Alright, on with the game!")
+    time.sleep(1.5)
 
 def tutorial():
   print("\nToday, you will compete for the title of dice rolling champion!")
@@ -70,82 +72,33 @@ def tutorial():
   print("On with the game!")
   time.sleep(2)
 
-# MAIN CODE
+def game():
+  rounds = 0
+  p1Score = 0
+  p2Score = 0
 
-rounds = 0
-tie = False
-p1Score = 0
-p2Score = 0
-
-auth(1)
-auth(2)
-tutorialQuestion()
-
-while rounds < 5:
-
-## BEGINNING OF PLAYER 1 - MAKE INTO FUNCTION
-
-    input("\nPlayer 1, you're up! Press ENTER to roll. ")
-    dice1 = random.randint(1,6)
-    dice2 = random.randint(1,6)
-    print("\nYou rolled" ,str(dice1) ,"and" ,str(dice2) + ", meaning that" ,str(dice1+dice2) ,"was added to your score!")
-    p1Score = p1Score + dice1 + dice2
-
-    if ((dice1+dice2)/2) == ((dice1+dice2)//2):
-        print("The total was even! Score increased by 10.")
-        p1Score = p1Score + 10
-
-    else:
-        if p1Score >= 5:
-            p1Score = p1Score - 5
-        print("But wait, the total was odd! Score decreased by 5.")
-    
-    if dice1 == dice2:
-        dice1 = random.randint(1,6)
-        p1Score = p1Score + dice1
-        print("You rolled double, and rolled again - adding" ,str(dice1) ,"to your score!")
-
-## BEGINNING OF PLAYER 2 - another function
-
-    input("\nYour turn, Player 2! Press ENTER to roll. ")
-    dice1 = random.randint(1,6)
-    dice2 = random.randint(1,6)
-    print("\nYou rolled" ,str(dice1) ,"and" ,str(dice2) + ", meaning that" ,str(dice1+dice2) ,"was added to your score!")
-    p2Score = p2Score + dice1 + dice2
-
-    if ((dice1+dice2)/2) == ((dice1+dice2)//2):
-        print("The total was even! Score increased by 10.")
-        p2Score = p2Score + 10
-    else:
-        if p2Score >= 5:
-            p2Score = p2Score - 5
-        else:
-            p2Score = 0
-        print("But wait, the total was odd! Score decreased by 5.")
-    
-    if dice1 == dice2:
-        dice1 = random.randint(1,6)
-        p2Score = p2Score + dice1
-        print("You rolled double, and rolled again - adding" ,str(dice1) ,"to your score!")
-    
+  while rounds < 5:
+    p1Score = roll(1,p1Score)
+    p2Score = roll(2,p2Score)
     rounds = rounds + 1
-
     if rounds < 5:
-        print("\nThat's the end of round" ,str(rounds) + "!" + "\nSo far, Player 1 has" ,str(p1Score) ,"and Player 2 has" ,str(p2Score) + "!")
-        time.sleep(2.5)
-        print("Now, on with round" ,str(rounds + 1) + ".")
-        time.sleep(1)
-
-time.sleep(1)
-print("\nThat's the game! Let's take a look at those scores, shall we?\n")
-time.sleep(2.5)
-if p1Score != p2Score:
+      time.sleep(2)
+      print("\nThat's the end of round" ,str(rounds) + "!" + "\nSo far, Player 1 has" ,str(p1Score) ,"and Player 2 has" ,str(p2Score) + "!")
+      time.sleep(2.5)
+      print("Now, on with round" ,str(rounds + 1) + ".")
+      time.sleep(1)
+  
+  time.sleep(1)
+  print("\nThat's the game! Let's take a look at those scores, shall we?\n")
+  time.sleep(2.5)
+  if p1Score != p2Score:
     print("Player 1 got...  ",end="")
     drumRoll()
     print(str(p1Score) + ".\n")
     print("Player 2 got...  ",end="")
     drumRoll()
     print(str(p2Score) + ".\n")
+    tieChk(p1Score,p2Score)
     if p1Score > p2Score:
         print("Congratulations Player 1, you won!\n")
         cheer()
@@ -153,18 +106,46 @@ if p1Score != p2Score:
         print("Congratulations Player 2, you won!\n")
         cheer()
 
-if p1Score == p2Score:
+def roll(currentPlayer,score):
+  i = currentPlayer
+  print("\nPlayer" ,str(i) + ", you're up! Press ENTER to roll." ,end=" ")
+  input()
+  dice1 = random.randint(1,6)
+  dice2 = random.randint(1,6)
+  print("\nYou rolled" ,str(dice1) ,"and" ,str(dice2) + ", meaning that" ,str(dice1+dice2) ,"was added to your score!")
+  score = score + dice1 + dice2
+  time.sleep(2)
+
+  if ((dice1+dice2)/2) == ((dice1+dice2)//2):
+    print("The total was even! Score increased by 10.")
+    score = score + 10
+    time.sleep(2)
+  else:
+      if score >= 5:
+        score = score - 5
+        print("But wait, the total was odd! Score decreased by 5.")
+        time.sleep(2)
+      elif score < 5:
+        score = 0
+        print("The total was odd, but as your score was below 5 you were only reset to 0.")
+        time.sleep(2)
+    
+  if dice1 == dice2:
+    dice1 = random.randint(1,6)
+    score = score + dice1
+    print("You rolled double, and rolled again - adding" ,str(dice1) ,"to your score!")
+    time.sleep(2)
+  return score
+
+def tieChk(p1Score,p2Score):
+  tie = False
+  if p1Score == p2Score:
     print("Will you look at that, it's a tie! You'll have to roll again until one of you gets the higher score.")
     tie = True
 
-while tie == True:
-    input("Player 1, press ENTER to roll! ") #function here?
-    dice1 = random.randint(1,6)
-    p1Score = p1Score + dice1
-
-    input("Back to you, Player 2. Press ENTER to roll! ")
-    dice1 = random.randint(1,6)
-    p2Score = p2Score + dice1
+  while tie == True:
+    p1Score = roll(1,p1Score)
+    p2Score = roll(2,p2Score)
 
     if p1Score == p2Score:
         tie == True
@@ -180,3 +161,10 @@ while tie == True:
                 print("Congratulations Player 1, you won!\n")
             else:
                 print("Congratulations Player 2, you won!\n")
+
+# MAIN CODE
+
+#auth(1)
+#auth(2)
+tutorialQuestion()
+game()
