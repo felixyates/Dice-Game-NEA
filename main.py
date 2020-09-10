@@ -4,13 +4,16 @@ import sys
 from replit import audio
 
 def drumRoll():
-    audio.play_file("drumRoll.mp3")
+  audio.play_file("drumRoll.mp3")
 
 def cheer():
   audio.play_file("cheer.mp3")
 
 def music():
-    audio.play_file("wiiParty.mp3",does_loop = True,volume=0.5)
+  global source
+  source = audio.play_file("wiiParty.mp3")
+  source.volume = 0.25
+  source.set_loop(-1)
 
 def auth(playerNumber):
   p1Valid = False
@@ -93,10 +96,13 @@ def game():
   time.sleep(2.5)
   if p1Score != p2Score:
     print("Player 1 got...  ",end="")
+    source.set_paused(True)
     drumRoll()
+    time.sleep(5)
     print(str(p1Score) + ".\n")
     print("Player 2 got...  ",end="")
     drumRoll()
+    time.sleep(5)
     print(str(p2Score) + ".\n")
     tieChk(p1Score,p2Score)
     if p1Score > p2Score:
@@ -105,6 +111,10 @@ def game():
     else:
         print("Congratulations Player 2, you won!\n")
         cheer()
+    
+    time.sleep(10)
+    input("\nThanks for playing, I hope you had fun!\nPress ENTER to exit. ")
+    time.sleep(3)
 
 def roll(currentPlayer,score):
   i = currentPlayer
@@ -159,8 +169,16 @@ def tieChk(p1Score,p2Score):
             print("Player 1 got" ,str(p1Score) ,"and Player 2 got" ,str(p2Score) + "!")
             if p1Score > p2Score:
                 print("Congratulations Player 1, you won!\n")
+                source.set_paused(True)
+                cheer()
             else:
                 print("Congratulations Player 2, you won!\n")
+                source.set_paused(True)
+                cheer()
+            
+            time.sleep(10)
+            input("\nThanks for playing, I hope you had fun!\nPress ENTER to exit. ")
+            time.sleep(3)
 
 # MAIN CODE
 
