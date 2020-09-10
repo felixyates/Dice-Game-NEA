@@ -70,71 +70,69 @@ def tutorial():
   print("On with the game!")
   time.sleep(2)
 
-# MAIN CODE
+def game():
+  rounds = 0
+  p1Score = 0
+  p2Score = 0
 
-rounds = 0
-tie = False
-p1Score = 0
-p2Score = 0
+  while rounds < 5:
+    for i in range(1,2):
+      currentPlayer = i
+      print("\nPlayer" ,str(i) + ", you're up! Press ENTER to roll." ,end=" ")
+      input()
+      dice1 = random.randint(1,6)
+      dice2 = random.randint(1,6)
+      print("\nYou rolled" ,str(dice1) ,"and" ,str(dice2) + ", meaning that" ,str(dice1+dice2) ,"was added to your score!")
 
-auth(1)
-auth(2)
-tutorialQuestion()
+      if currentPlayer == 1:
+        p1Score = p1Score + dice1 + dice2
+      else:
+        p2Score = p2Score + dice1 + dice2
 
-while rounds < 5:
-
-## BEGINNING OF PLAYER 1 - MAKE INTO FUNCTION
-
-    input("\nPlayer 1, you're up! Press ENTER to roll. ")
-    dice1 = random.randint(1,6)
-    dice2 = random.randint(1,6)
-    print("\nYou rolled" ,str(dice1) ,"and" ,str(dice2) + ", meaning that" ,str(dice1+dice2) ,"was added to your score!")
-    p1Score = p1Score + dice1 + dice2
-
-    if ((dice1+dice2)/2) == ((dice1+dice2)//2):
+      if ((dice1+dice2)/2) == ((dice1+dice2)//2):
         print("The total was even! Score increased by 10.")
-        p1Score = p1Score + 10
-
-    else:
-        if p1Score >= 5:
-            p1Score = p1Score - 5
-        print("But wait, the total was odd! Score decreased by 5.")
-    
-    if dice1 == dice2:
-        dice1 = random.randint(1,6)
-        p1Score = p1Score + dice1
-        print("You rolled double, and rolled again - adding" ,str(dice1) ,"to your score!")
-
-## BEGINNING OF PLAYER 2 - another function
-
-    input("\nYour turn, Player 2! Press ENTER to roll. ")
-    dice1 = random.randint(1,6)
-    dice2 = random.randint(1,6)
-    print("\nYou rolled" ,str(dice1) ,"and" ,str(dice2) + ", meaning that" ,str(dice1+dice2) ,"was added to your score!")
-    p2Score = p2Score + dice1 + dice2
-
-    if ((dice1+dice2)/2) == ((dice1+dice2)//2):
-        print("The total was even! Score increased by 10.")
-        p2Score = p2Score + 10
-    else:
-        if p2Score >= 5:
-            p2Score = p2Score - 5
+        if currentPlayer == 1:
+          p1Score = p1Score + 10
         else:
-            p2Score = 0
-        print("But wait, the total was odd! Score decreased by 5.")
-    
-    if dice1 == dice2:
-        dice1 = random.randint(1,6)
-        p2Score = p2Score + dice1
-        print("You rolled double, and rolled again - adding" ,str(dice1) ,"to your score!")
-    
-    rounds = rounds + 1
+          p2Score = p2Score + 10
 
-    if rounds < 5:
+      else:
+        if currentPlayer == 1:
+          if p1Score >= 5:
+            p1Score = p1Score - 5
+            print("But wait, the total was odd! Score decreased by 5.")
+        else:
+          if p2Score >= 5:
+            p2Score = p2Score - 5
+            print("But wait, the total was odd! Score decreased by 5.")
+    
+        if dice1 == dice2:
+          dice1 = random.randint(1,6)
+          if currentPlayer == 1:
+            p1Score = p1Score + dice1
+          else:
+            p2Score = p2Score + dice1
+          print("You rolled double, and rolled again - adding" ,str(dice1) ,"to your score!")
+      
+      rounds = rounds + 1
+
+      if rounds < 5:
         print("\nThat's the end of round" ,str(rounds) + "!" + "\nSo far, Player 1 has" ,str(p1Score) ,"and Player 2 has" ,str(p2Score) + "!")
         time.sleep(2.5)
         print("Now, on with round" ,str(rounds + 1) + ".")
         time.sleep(1)
+
+# MAIN CODE
+
+tie = False
+p1Score = 0
+p2Score = 0
+rounds = 0 ## REMOVE B4 RUNNING
+
+#auth(1)
+#auth(2)
+tutorialQuestion()
+game()
 
 time.sleep(1)
 print("\nThat's the game! Let's take a look at those scores, shall we?\n")
