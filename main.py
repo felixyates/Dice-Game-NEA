@@ -4,13 +4,16 @@ import sys
 from replit import audio
 
 def drumRoll():
-    audio.play_file("drumRoll.mp3")
+  audio.play_file("drumRoll.mp3")
 
 def cheer():
   audio.play_file("cheer.mp3")
 
 def music():
-    audio.play_file("wiiParty.mp3",does_loop = True,volume=0.5)
+  global source
+  source = audio.play_file("wiiParty.mp3")
+  source.volume = 0.25
+  source.set_loop(-1)
 
 def auth(playerNumber):
   p1Valid = False
@@ -73,41 +76,48 @@ def tutorial():
   time.sleep(2)
 
 def game():
-  rounds = 1
+  rounds = 0
   p1Score = 0
   p2Score = 0
 
   while rounds < 5:
-    p1Score = p1Score + roll(1)
-    p2Score = p2Score + roll(2)
+    p1Score = roll(1,p1Score)
+    p2Score = roll(2,p2Score)
+    rounds = rounds + 1
     if rounds < 5:
       time.sleep(2)
       print("\nThat's the end of round" ,str(rounds) + "!" + "\nSo far, Player 1 has" ,str(p1Score) ,"and Player 2 has" ,str(p2Score) + "!")
       time.sleep(2.5)
       print("Now, on with round" ,str(rounds + 1) + ".")
       time.sleep(1)
-
-      rounds = rounds + 1
   
   time.sleep(1)
   print("\nThat's the game! Let's take a look at those scores, shall we?\n")
   time.sleep(2.5)
   if p1Score != p2Score:
     print("Player 1 got...  ",end="")
+    source.set_paused(True)
     drumRoll()
+    time.sleep(5)
     print(str(p1Score) + ".\n")
     print("Player 2 got...  ",end="")
     drumRoll()
+    time.sleep(5)
     print(str(p2Score) + ".\n")
+    time.sleep(1)
+    tieChk(p1Score,p2Score)
     if p1Score > p2Score:
         print("Congratulations Player 1, you won!\n")
         cheer()
     else:
         print("Congratulations Player 2, you won!\n")
         cheer()
+    
+    time.sleep(10)
+    input("\nThanks for playing, I hope you had fun!\nPress ENTER to exit. ")
+    time.sleep(3)
 
-def roll(currentPlayer):
-  score = 0
+def roll(currentPlayer,score):
   i = currentPlayer
   print("\nPlayer" ,str(i) + ", you're up! Press ENTER to roll." ,end=" ")
   input()
@@ -138,29 +148,15 @@ def roll(currentPlayer):
     time.sleep(2)
   return score
 
-# MAIN CODE
-
-tie = False
-p1Score = 0
-p2Score = 0
-
-#auth(1)
-#auth(2)
-tutorialQuestion()
-game()
-
-if p1Score == p2Score:
+def tieChk(p1Score,p2Score):
+  tie = False
+  if p1Score == p2Score:
     print("Will you look at that, it's a tie! You'll have to roll again until one of you gets the higher score.")
     tie = True
 
-while tie == True:
-    input("Player 1, press ENTER to roll! ") #function here?
-    dice1 = random.randint(1,6)
-    p1Score = p1Score + dice1
-
-    input("Back to you, Player 2. Press ENTER to roll! ")
-    dice1 = random.randint(1,6)
-    p2Score = p2Score + dice1
+  while tie == True:
+    p1Score = roll(1,p1Score)
+    p2Score = roll(2,p2Score)
 
     if p1Score == p2Score:
         tie == True
@@ -174,5 +170,20 @@ while tie == True:
             print("Player 1 got" ,str(p1Score) ,"and Player 2 got" ,str(p2Score) + "!")
             if p1Score > p2Score:
                 print("Congratulations Player 1, you won!\n")
+                source.set_paused(True)
+                cheer()
             else:
                 print("Congratulations Player 2, you won!\n")
+                source.set_paused(True)
+                cheer()
+            
+            time.sleep(10)
+            input("\nThanks for playing, I hope you had fun!\nPress ENTER to exit. ")
+            time.sleep(3)
+
+# MAIN CODE
+
+auth(1)
+auth(2)
+tutorialQuestion()
+game()
