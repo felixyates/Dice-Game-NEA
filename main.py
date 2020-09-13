@@ -93,29 +93,7 @@ def game():
   
   time.sleep(1)
   print("\nThat's the game! Let's take a look at those scores, shall we?\n")
-  time.sleep(2.5)
-  if p1Score != p2Score:
-    print("Player 1 got...  ",end="")
-    source.set_paused(True)
-    drumRoll()
-    time.sleep(5)
-    print(str(p1Score) + ".\n")
-    print("Player 2 got...  ",end="")
-    drumRoll()
-    time.sleep(5)
-    print(str(p2Score) + ".\n")
-    time.sleep(1)
-    tieChk(p1Score,p2Score)
-    if p1Score > p2Score:
-        print("Congratulations Player 1, you won!\n")
-        cheer()
-    else:
-        print("Congratulations Player 2, you won!\n")
-        cheer()
-    
-    time.sleep(10)
-    input("\nThanks for playing, I hope you had fun!\nPress ENTER to exit. ")
-    time.sleep(3)
+  gameEnd(p1Score,p2Score)
 
 def roll(currentPlayer,score):
   i = currentPlayer
@@ -148,6 +126,37 @@ def roll(currentPlayer,score):
     time.sleep(2)
   return score
 
+def gameEnd(p1Score,p2Score):
+  time.sleep(2.5)
+  if p1Score != p2Score:
+    print("Player 1 got...  ",end="")
+    source.set_paused(True)
+    drumRoll()
+    time.sleep(5)
+    print(str(p1Score) + ".\n")
+    print("Player 2 got...  ",end="")
+    drumRoll()
+    time.sleep(5)
+    print(str(p2Score) + ".\n")
+    time.sleep(1)
+    tieChk(p1Score,p2Score)
+    if p1Score > p2Score:
+      winner = 1
+      winnerScore = p1Score
+      print("Congratulations Player 1, you won!\n")
+      cheer()
+    else:
+      winner = 2
+      winnerScore = p2Score
+      print("Congratulations Player 2, you won!\n")
+      cheer()
+
+    leaderboard(winner,winnerScore)
+    
+    time.sleep(10)
+    input("\nThanks for playing, I hope you had fun!\nPress ENTER to exit. ")
+    time.sleep(3)
+
 def tieChk(p1Score,p2Score):
   tie = False
   if p1Score == p2Score:
@@ -164,26 +173,53 @@ def tieChk(p1Score,p2Score):
     else:
         tie == False
         print("Ok, the tie's been broken. Back to the scoreboard!")
-        
-        time.sleep(2.5)
-        if p1Score != p2Score:
-            print("Player 1 got" ,str(p1Score) ,"and Player 2 got" ,str(p2Score) + "!")
-            if p1Score > p2Score:
-                print("Congratulations Player 1, you won!\n")
-                source.set_paused(True)
-                cheer()
-            else:
-                print("Congratulations Player 2, you won!\n")
-                source.set_paused(True)
-                cheer()
-            
-            time.sleep(10)
-            input("\nThanks for playing, I hope you had fun!\nPress ENTER to exit. ")
-            time.sleep(3)
+        gameEnd(p1Score,p2Score)
+
+def leaderboard(winner,winnerScore):
+  print("Hey, Player" ,str(winner) +"!" ,"Would you like to add your score to the leaderboard? (Y/N) ",end=" ")
+  ldb = input().lower()
+
+  if ldb == "y" or "yes":
+    winnerName = input("Alright, what name am I putting that under?")
+    ldbFile = open("leaderboard.txt","a")
+    ldbFile.write(winnerName + "," + str(winnerScore))
+    print("Thanks! It's been added to the leaderboard.")
+    ldbFile.close()
+  else:
+    print("Alright, no problem!")
+
+  ldbFile = open("leaderboard.txt","r")
+  ldbText = "LEADERBOARD"
+  print("\n\n")
+  print(ldbText.center(10,"-"))
+  print("#1 -")
+
 
 # MAIN CODE
 
-auth(1)
-auth(2)
-tutorialQuestion()
-game()
+#auth(1)
+#auth(2)
+#tutorialQuestion()
+#game()
+
+winner = 1
+winnerScore = 56
+
+print("Hey, Player" ,str(winner) +"!" ,"Would you like to add your score to the leaderboard? (Y/N) ",end="")
+ldb = input().lower()
+
+if ldb == "y" or "yes":
+  winnerName = input("Alright, what name am I putting that under? ")
+  ldbFile = open("leaderboard.txt","a")
+  ldbFile.write(winnerName + "," + str(winnerScore)+"\n")
+  print("Thanks! It's been added to the leaderboard.")
+  ldbFile.close()
+else:
+  print("Alright, no problem!")
+
+ldbFile = open("leaderboard.txt","r")
+ldbText = "LEADERBOARD"
+print("\n\n")
+print(ldbText.center(10,"-"))
+print(ldbArray)
+ldbFile.close()
