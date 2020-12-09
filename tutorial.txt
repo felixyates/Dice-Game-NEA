@@ -1,0 +1,6 @@
+Today, you will compete for the title of dice rolling champion!
+You will roll two dice at the start of each round, the total of which will be added to your score.
+If the total is even, you'll gain 10 points, but if it's odd, you'll lose 5 points (you won't go below 0, though).
+If you score a double, you can roll again, and the value of the dice will be added to your score.
+At the end of 5 rounds, if it's a tie, you will roll one dice each until one of you scores more!
+On with the game!
