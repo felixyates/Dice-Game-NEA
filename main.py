@@ -4,8 +4,17 @@ from replit import audio
 
 ## (C) Felix Yates 2020. More information available in README.md
 
-global sleep
-sleep = 2
+# These are global sleep timings. Change these to 0 when testing.
+# Default values can also be found below to change back to.
+
+global ssSleep # supershort sleep, default - 1.5 seconds
+global sSleep # short sleep, default - 2 seconds
+global mSleep # medium sleep, default - 5 seconds
+global lSleep # long sleep, default - 8 seconds
+ssSleep = 1.5
+sSleep = 2
+mSleep = 5
+lSleep = 8
 
 
 def drumRoll():
@@ -126,7 +135,7 @@ def accountCreator(playerNumber):
     valid = False
     players = []
     print("That's OK! I'll get one set up for you right away.")
-    time.sleep(sleep)
+    time.sleep(sSleep)
     newUsername = input(
         "\nFirst, pick a username.\nRemember, this will appear on the leaderboard, so keep it clean! "
     )
@@ -169,15 +178,15 @@ def accountCreator(playerNumber):
 
 def tutorialQuestion():
     music()
-    time.sleep(2)
+    time.sleep(sSleep)
     print("\nWelcome to un-named dice rolling game!")
-    time.sleep(2)
+    time.sleep(sSleep)
     print(
         "Here's a quick look at the leaderboard. I hope you'll be beating these scores!\n"
     )
-    time.sleep(2)
+    time.sleep(sSleep)
     leaderboardDisplay()
-    time.sleep(5)
+    time.sleep(mSleep)
     answer = input(
         "Final thing - would you like to go through the tutorial? (Y/N) "
     ).lower()
@@ -186,7 +195,7 @@ def tutorialQuestion():
         tutorial()
     elif answer == "n" or answer == "no":
         print("Alright then, let's get this show on the road!")
-        time.sleep(1.5)
+        time.sleep(ssSleep)
     else:
         valid = False
         while valid == False:
@@ -198,7 +207,7 @@ def tutorialQuestion():
             elif answer == "n" or answer == "no":
                 valid = True
                 print("Alright, let's get this show on the road!")
-                time.sleep(1.5)
+                time.sleep(ssSleep)
 
 
 def tutorial():
@@ -208,7 +217,7 @@ def tutorial():
         for i in range(len(tutorial)):
             tutorial[i] = str(tutorial[i])
             print(str(tutorial[i]), end="")
-            time.sleep(5)
+            time.sleep(mSleep)
             i += 1
     print("\n")
 
@@ -230,16 +239,16 @@ def game():
         p2Score = roll(2, p2Score)
         rounds = rounds + 1
         if rounds < 5:
-            time.sleep(2)
+            time.sleep(sSleep)
             print("\nThat's the end of round",
                   str(rounds) + "!" + "\nSo far, Player 1 has", str(p1Score),
                   "and Player 2 has",
                   str(p2Score) + "!")
-            time.sleep(2.5)
+            time.sleep(sSleep)
             print("Now, on with round", str(rounds + 1) + ".")
-            time.sleep(1)
+            time.sleep(ssSleep)
 
-    time.sleep(1)
+    time.sleep(ssSleep)
     print("\nThat's the game! Let's take a look at those scores, shall we?\n")
     gameEnd(p1Score, p2Score)
 
@@ -254,46 +263,46 @@ def roll(currentPlayer, score):
           str(dice2) + ", meaning that", str(dice1 + dice2),
           "was added to your score!")
     score = score + dice1 + dice2
-    time.sleep(2)
+    time.sleep(sSleep)
 
     if ((dice1 + dice2) / 2) == ((dice1 + dice2) // 2):
         print("The total was even! Score increased by 10.")
         score = score + 10
-        time.sleep(2)
+        time.sleep(sSleep)
     else:
         if score >= 5:
             score = score - 5
             print("But wait, the total was odd! Score decreased by 5.")
-            time.sleep(2)
+            time.sleep(sSleep)
         elif score < 5:
             score = 0
             print(
                 "The total was odd, but as your score was below 5 you were only reset to 0."
             )
-            time.sleep(2)
+            time.sleep(sSleep)
 
     if dice1 == dice2:
         dice1 = random.randint(1, 6)
         score = score + dice1
         print("You rolled double, and rolled again - adding", str(dice1),
               "to your score!")
-        time.sleep(2)
+        time.sleep(sSleep)
     return score
 
 
 def gameEnd(p1Score, p2Score):
-    time.sleep(2.5)
+    time.sleep(sSleep)
     if p1Score != p2Score:
         print("Player 1 got...  ", end="")
         source.set_paused(True)
         drumRoll()
-        time.sleep(5)
+        time.sleep(mSleep)
         print(str(p1Score) + ".\n")
         print("Player 2 got...  ", end="")
         drumRoll()
-        time.sleep(5)
+        time.sleep(mSleep)
         print(str(p2Score) + ".\n")
-        time.sleep(1)
+        time.sleep(ssSleep)
         tieChk(p1Score, p2Score)
         if p1Score > p2Score:
             winner = 1
@@ -304,9 +313,9 @@ def gameEnd(p1Score, p2Score):
 
     leaderboard(winner, p1Score, p2Score)
 
-    time.sleep(10)
+    time.sleep(lSleep)
     input("\nThanks for playing, I hope you had fun!\nPress ENTER to exit. ")
-    time.sleep(3)
+    time.sleep(sSleep)
 
 
 def tieChk(p1Score, p2Score):
