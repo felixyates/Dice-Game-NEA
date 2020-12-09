@@ -4,6 +4,10 @@ from replit import audio
 
 ## (C) Felix Yates 2020. More information available in README.md
 
+global sleep
+sleep = 2
+
+
 def drumRoll():
     audio.play_file("drumRoll.mp3")
 
@@ -29,27 +33,28 @@ def leaderboardDisplay():
         for i in range((len(ldbFile) - 6), len(ldbFile)):
             recentScores.append(str(ldbFile[i]))
         for i in range(5, 0, -1):
-          y = (i-6)*-1
-          entry = str(recentScores[i]).split(",")
-          name = str(entry[0]).strip()
-          score = str(entry[1]).strip()
-          print(f"#{y} {name}: {score}\n")
+            y = (i - 6) * -1
+            entry = str(recentScores[i]).split(",")
+            name = str(entry[0]).strip()
+            score = str(entry[1]).strip()
+            print(f"#{y} {name}: {score}\n")
 
         print("-" * 10 + "\n")
 
         print("TOP SCORES:\n")
         entries = []
         for x in range(len(ldbFile)):
-          entries.append(str(ldbFile[x]))
-          entries[x] = str(entries[x]).split(',')
-          entries[x][1] = int(str(entries[x][i]).strip())
+            entries.append(str(ldbFile[x]))
+            entries[x] = str(entries[x]).split(',')
+            entries[x][1] = int(str(entries[x][i]).strip())
         leaderboard = [tuple(x) for x in entries]
-        leaderboard.sort(key=lambda tup: tup[1],reverse=True)
+        leaderboard.sort(key=lambda tup: tup[1], reverse=True)
         for i in range(5):
-          score = int(str(leaderboard[i][1]).strip())
-          print(f"#{i+1} {leaderboard[i][0]}: {str(score)}\n")
+            score = int(str(leaderboard[i][1]).strip())
+            print(f"#{i+1} {leaderboard[i][0]}: {str(score)}\n")
 
         print("-" * 10 + "\n")
+
 
 def auth(playerNumber):
     valid = False
@@ -77,11 +82,57 @@ def auth(playerNumber):
             if passwordInput != password:
                 passwordInput = input("Password incorrect. Please try again: ")
 
-"""def account(playerNumber):
-  valid = False
-  exists = True
-  answer = input(f"Welcome, Player {playerNumber}! Do you have an account? (Y/N) ")
-  """
+
+def account(playerNumber,hasAccount):
+    valid = False
+    exists = True
+    players = []
+    if playerNumber == 1:
+        hasAccount = input(
+            f"Welcome, Player {playerNumber}! Do you have an account? (Y/N) "
+        ).lower()
+    else:
+        hasAccount = input(f"Excellent! And what about you, Player {playerNumber}? (Y/N) ")
+    if hasAccount == "y" or hasAccount == "yes":
+        if playerNumber == 1:
+          account(2,"")
+        elif playerNumber == 2:
+          print("\nPerfect! Now we'll just sign you in and get playing...")
+          auth(1)
+    elif hasAccount == "n" or hasAccount == "no":
+        print("That's OK! We'll get one set up for you right away.")
+        time.sleep(sleep)
+        newUsername = input(
+            "\nFirst, pick a username.\nRemember, this will appear on the leaderboard, so keep it clean! "
+        )
+        with open('players.txt', 'r') as existingPlayers:
+          existingPlayers = existingPlayers.readlines()
+          for i in range(len(existingPlayers)):
+            players.append(str(existingPlayers[i]).split(","))
+            players[i][1] = players[i][1].strip()
+
+        while exists == True:
+              for i in range(len(players)):
+                if str(players[i][0]) == newUsername:
+                  exists = True
+                  newUsername = input(f"Uh oh, that username ({newUsername}) already exists. Try another one: ")
+                  i = 0
+                else:
+                  exists = False
+        newPassword = input("Now pick a password. Make sure you remember it! ")
+        while valid == False:
+          if newPassword == "":
+            newPassword = input("Password cannot be blank. Try again: ")
+          else:
+            valid = True
+        with open('players.txt','a') as playersFile:
+          playersFile.write(f"{newUsername},{newPassword}\n")
+          print(f"Your account was successfully set up.\n")
+        if playerNumber == 1:
+          account(2,"")
+    else:
+      while valid == False:
+        account(playerNumber,hasAccount)
 
 
 
@@ -118,6 +169,7 @@ def tutorialQuestion():
                 print("Alright, let's get this show on the road!")
                 time.sleep(1.5)
 
+
 def tutorial():
     with open("tutorial.txt", 'r') as file:
         print("\n")
@@ -128,6 +180,7 @@ def tutorial():
             time.sleep(5)
             i += 1
     print("\n")
+
 
 def game():
     rounds = 0
@@ -151,6 +204,7 @@ def game():
     time.sleep(1)
     print("\nThat's the game! Let's take a look at those scores, shall we?\n")
     gameEnd(p1Score, p2Score)
+
 
 def roll(currentPlayer, score):
     i = currentPlayer
@@ -188,6 +242,7 @@ def roll(currentPlayer, score):
         time.sleep(2)
     return score
 
+
 def gameEnd(p1Score, p2Score):
     time.sleep(2.5)
     if p1Score != p2Score:
@@ -215,6 +270,7 @@ def gameEnd(p1Score, p2Score):
     input("\nThanks for playing, I hope you had fun!\nPress ENTER to exit. ")
     time.sleep(3)
 
+
 def tieChk(p1Score, p2Score):
     tie = False
     if p1Score == p2Score:
@@ -235,6 +291,7 @@ def tieChk(p1Score, p2Score):
             print("Ok, the tie's been broken. Back to the scoreboard!")
             gameEnd(p1Score, p2Score)
 
+
 def leaderboard(winner, p1Score, p2Score):
     print("Congrats Player", str(winner) + "!")
     print("To put your scores on the scoreboard, I need your names...")
@@ -245,10 +302,12 @@ def leaderboard(winner, p1Score, p2Score):
         ldbFile.write(player2 + "," + str(p2Score) + "\n")
         print("Thanks! They've been added to the leaderboard.")
 
-## MAIN CODE
 
-for i in range(2):
+## MAIN CODE
+"""for i in range(2):
     auth((i + 1))
 print("Correct! On with the game :)")
 tutorialQuestion()
-game()
+game()"""
+
+account(1,"")

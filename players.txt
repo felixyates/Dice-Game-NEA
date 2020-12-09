@@ -1,2 +1,6 @@
 player1,password
 player2,password
+Felix,YOMYSLIME
+Felix2,YOMYSLIME
+Test2,Password1
+Test3,Password1
