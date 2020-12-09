@@ -83,57 +83,86 @@ def auth(playerNumber):
                 passwordInput = input("Password incorrect. Please try again: ")
 
 
-def account(playerNumber,hasAccount):
+def accountChecker(playerNumber):
     valid = False
-    exists = True
-    players = []
     if playerNumber == 1:
         hasAccount = input(
             f"Welcome, Player {playerNumber}! Do you have an account? (Y/N) "
         ).lower()
-    else:
-        hasAccount = input(f"Excellent! And what about you, Player {playerNumber}? (Y/N) ")
+    elif playerNumber == 2:
+        hasAccount = input(
+            f"Excellent! And what about you, Player {playerNumber}? (Y/N) "
+        ).lower()
+
     if hasAccount == "y" or hasAccount == "yes":
         if playerNumber == 1:
-          account(2,"")
+            accountChecker(2)
         elif playerNumber == 2:
-          print("\nPerfect! Now we'll just sign you in and get playing...")
-          auth(1)
+            print("\nPerfect! Now we'll just sign you in and get playing...\n")
+            for i in range(2):
+              auth(i + 1)
+            print("Correct! On with the game :)")
+            tutorialQuestion()
+            game()
+
     elif hasAccount == "n" or hasAccount == "no":
-        print("That's OK! We'll get one set up for you right away.")
-        time.sleep(sleep)
-        newUsername = input(
-            "\nFirst, pick a username.\nRemember, this will appear on the leaderboard, so keep it clean! "
-        )
-        with open('players.txt', 'r') as existingPlayers:
-          existingPlayers = existingPlayers.readlines()
-          for i in range(len(existingPlayers)):
+        accountCreator(playerNumber)
+    else:
+        valid = False
+        while valid != True:
+          hasAccount = input("Please enter either 'Y' or 'N': ").lower()
+          if hasAccount == 'y' or hasAccount == 'yes':
+            valid = True
+            if playerNumber == 1:
+              accountChecker(2)
+            elif playerNumber == 2:
+              print("\nPerfect! Now we'll just sign you in and get playing...\n")
+              for i in range(2):
+                auth(i + 1)
+          elif hasAccount == 'n' or hasAccount == 'no':
+            valid = True
+            accountCreator(playerNumber)
+
+
+def accountCreator(playerNumber):
+    exists = True
+    valid = False
+    players = []
+    print("That's OK! I'll get one set up for you right away.")
+    time.sleep(sleep)
+    newUsername = input(
+        "\nFirst, pick a username.\nRemember, this will appear on the leaderboard, so keep it clean! "
+    )
+    with open('players.txt', 'r') as existingPlayers:
+        existingPlayers = existingPlayers.readlines()
+        for i in range(len(existingPlayers)):
             players.append(str(existingPlayers[i]).split(","))
             players[i][1] = players[i][1].strip()
 
-        while exists == True:
-              for i in range(len(players)):
-                if str(players[i][0]) == newUsername:
-                  exists = True
-                  newUsername = input(f"Uh oh, that username ({newUsername}) already exists. Try another one: ")
-                  i = 0
-                else:
-                  exists = False
-        newPassword = input("Now pick a password. Make sure you remember it! ")
-        while valid == False:
-          if newPassword == "":
-            newPassword = input("Password cannot be blank. Try again: ")
-          else:
-            valid = True
-        with open('players.txt','a') as playersFile:
-          playersFile.write(f"{newUsername},{newPassword}\n")
-          print(f"Your account was successfully set up.\n")
-        if playerNumber == 1:
-          account(2,"")
-    else:
-      while valid == False:
-        account(playerNumber,hasAccount)
+    while exists == True:
+      for i in range(len(players)):
+        if str(players[i][0]) == newUsername:
+          exists = True
+          newUsername = input(
+            f"Uh oh, that username ({newUsername}) already exists. Try another one: "
+            )
+          i = 0
+        else:
+          exists = False
+          newPassword = input("Now pick a password. Make sure you remember it! ")
 
+      while valid == False:
+        if newPassword == "":
+          newPassword = input("Password cannot be blank. Try again: ")
+        else:
+          valid = True
+
+        with open('players.txt', 'a') as playersFile:
+            playersFile.write(f"{newUsername},{newPassword}\n")
+            print(f"Your account was successfully set up.\n")
+
+        if playerNumber == 1:
+            accountChecker(2)
 
 
 def tutorialQuestion():
@@ -304,10 +333,6 @@ def leaderboard(winner, p1Score, p2Score):
 
 
 ## MAIN CODE
-"""for i in range(2):
-    auth((i + 1))
-print("Correct! On with the game :)")
-tutorialQuestion()
-game()"""
 
-account(1,"")
+for i in range(2):
+  accountChecker(i+1)
