@@ -98,12 +98,7 @@ def accountChecker(playerNumber):
         if playerNumber == 1:
             accountChecker(2)
         elif playerNumber == 2:
-            print("\nPerfect! Now we'll just sign you in and get playing...\n")
-            for i in range(2):
-                auth(i + 1)
-            print("Correct! On with the game :)")
-            tutorialQuestion()
-            game()
+            startGame()
 
     elif hasAccount == "n" or hasAccount == "no":
         accountCreator(playerNumber)
@@ -143,6 +138,7 @@ def accountCreator(playerNumber):
 
     while exists == True:
         for i in range(len(players)):
+            print(str(players[i][0]))
             if str(players[i][0]) == newUsername:
                 exists = True
                 newUsername = input(
@@ -160,10 +156,15 @@ def accountCreator(playerNumber):
             valid = True
 
     with open('players.txt', 'a') as playersFile:
-      playersFile.write(f"{newUsername},{newPassword}\n")
+      playersFile.write(newUsername)
+      playersFile.write(",")
+      playersFile.write(newPassword)
+      playersFile.write("\n")
       print(f"Your account was successfully set up.\n")
     if playerNumber == 1:
       accountChecker(2)
+    else:
+      startGame()
 
 
 def tutorialQuestion():
@@ -211,6 +212,13 @@ def tutorial():
             i += 1
     print("\n")
 
+def startGame():
+  print("\nPerfect! Now we'll just sign you in and get playing...\n")
+  for i in range(2):
+    auth(i + 1)
+  print("Correct! On with the game :)")
+  tutorialQuestion()
+  game()
 
 def game():
     rounds = 0
