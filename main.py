@@ -334,5 +334,4 @@ def leaderboard(winner, p1Score, p2Score):
 
 ## MAIN CODE
 
-for i in range(2):
-  accountChecker(i+1)
+accountChecker(1)
