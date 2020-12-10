@@ -342,8 +342,8 @@ def tieChk(p1Score, p2Score):
 def leaderboard(winner, p1Score, p2Score):
     print("Congrats Player", str(winner) + "!")
     print("To put your scores on the scoreboard, I need your names...")
-    player1 = input("Player 1, what I am I putting your score under? ")
-    player2 = input("What about you, Player 2? ")
+    player1 = 'x'
+    player2 = 'x'
     with open("leaderboard.txt", "a") as ldbFile:
         ldbFile.write(player1 + "," + str(p1Score) + "\n")
         ldbFile.write(player2 + "," + str(p2Score) + "\n")
