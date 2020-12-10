@@ -18,18 +18,28 @@ lSleep = 8
 
 
 def drumRoll():
-    audio.play_file("drumRoll.mp3")
+    try:
+      audio.play_file("drumRoll.mp3")
+    except TimeoutError:
+      pass
 
 
 def cheer():
-    audio.play_file("cheer.mp3")
+    try:
+      audio.play_file("cheer.mp3")
+    except TimeoutError:
+      pass
 
 
 def music():
-    global source
-    source = audio.play_file("wiiParty.mp3")
-    source.volume = 0.25
-    source.set_loop(-1)
+    try:
+      global source
+      source = audio.play_file("wiiParty.mp3")
+      audio.play_file("cheer.mp3")
+      source.volume = 0.25
+      source.set_loop(-1)
+    except TimeoutError:
+      pass
 
 
 def leaderboardDisplay():
@@ -314,22 +324,22 @@ def roll(currentPlayer, score):
 def gameEnd(p1Score, p2Score):
     time.sleep(sSleep)
     if p1Score != p2Score:
-        print("Player 1 got...  ", end="")
+        print(f"{p1Username} got...  ", end="")
         source.set_paused(True)
         drumRoll()
         time.sleep(mSleep)
         print(str(p1Score) + ".\n")
-        print("Player 2 got...  ", end="")
+        print(f"{p2Username} got...  ", end="")
         drumRoll()
         time.sleep(mSleep)
         print(str(p2Score) + ".\n")
         time.sleep(ssSleep)
         tieChk(p1Score, p2Score)
         if p1Score > p2Score:
-            winner = 1
+            winner = p1Username
         else:
-            winner = 2
-        print("Congratulations Player " + str(winner) + ", you won!\n")
+            winner = p2Username
+        print(f"Congratulations {winner}, you won!\n")
         cheer()
 
     leaderboard(winner, p1Score, p2Score)
@@ -361,7 +371,6 @@ def tieChk(p1Score, p2Score):
 
 
 def leaderboard(winner, p1Score, p2Score):
-    print("Congrats Player", str(winner) + "!")
     with open("leaderboard.txt", "a") as ldbFile:
         ldbFile.write(p1Username + "," + str(p1Score) + "\n")
         ldbFile.write(p2Username + "," + str(p2Score) + "\n")
