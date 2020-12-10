@@ -67,20 +67,34 @@ def leaderboardDisplay():
 
 def auth(playerNumber):
     valid = False
-    with open("players.txt", "r") as playerfile:
-        players = playerfile.readlines()
-        player = str(players[playerNumber - 1]).split(',')
-    for i in range(len(player)):
-        player[i] = str(player[i]).strip()
-    print(
-        "Please enter the username for Player",
-        str(playerNumber) + ": ",
-        end="")
-    usernameInput = input()
-    passwordInput = input("And now the password: ")
-    print("\n")
-    username = str(player[0])
-    password = str(player[1])
+    exists = False
+    usernameInput = input(f"Enter your username, Player {playerNumber}: ")
+    players = getPlayers()
+    exists = doesExist(usernameInput,players)
+    print(exists)
+    if exists == True:
+      print('Account exists.')
+    else:
+      while exists == False:
+        createAccount = input(f"That account ({usernameInput}) does not exist. Would you like to create a new account? (Y/N) ").lower()
+        if createAccount == 'y' or 'yes':
+          accountCreator(playerNumber)
+        else:
+          auth(playerNumber)
+    
+    for i in range(len(players)):
+      if str(players[i][0]) == usernameInput:
+        username = usernameInput
+        password = str(players[i][1])
+    
+    if playerNumber == 1:
+      global p1Username
+      p1Username = username
+    elif playerNumber == 2:
+      global p2Username
+      p2Username = username
+
+    passwordInput = input("Now the password: ")
     while valid != True:
         if (usernameInput == username) and (passwordInput == password):
             valid = True
@@ -91,6 +105,25 @@ def auth(playerNumber):
             if passwordInput != password:
                 passwordInput = input("Password incorrect. Please try again: ")
 
+def getPlayers():
+  players = []
+  with open('players.txt', 'r') as existingPlayers:
+    existingPlayers = existingPlayers.readlines()
+    for i in range(len(existingPlayers)):
+      players.append(str(existingPlayers[i]).split(","))
+      players[i][1] = players[i][1].strip()
+  return players
+
+def doesExist(usernameInput,players):
+  exists = True
+  while exists == True:
+      for i in range(len(players)):
+          if str(players[i][0]) == usernameInput:
+              exists = True
+              return exists
+              
+  if exists == False:
+    return False
 
 def accountChecker(playerNumber):
     valid = False
@@ -341,14 +374,11 @@ def tieChk(p1Score, p2Score):
 
 def leaderboard(winner, p1Score, p2Score):
     print("Congrats Player", str(winner) + "!")
-    print("To put your scores on the scoreboard, I need your names...")
-    player1 = 'x'
-    player2 = 'x'
     with open("leaderboard.txt", "a") as ldbFile:
-        ldbFile.write(player1 + "," + str(p1Score) + "\n")
-        ldbFile.write(player2 + "," + str(p2Score) + "\n")
-        print("Thanks! They've been added to the leaderboard.")
-
+        ldbFile.write(p1Username + "," + str(p1Score) + "\n")
+        ldbFile.write(p2Username + "," + str(p2Score) + "\n")
+        print("I've added your scores to the leaderboard! Are you in the top 5?")
+    leaderboardDisplay()
 
 ## MAIN CODE
 

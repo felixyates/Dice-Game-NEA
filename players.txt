@@ -1,4 +1,4 @@
 player1,password
 player2,password
-felix,ok>#
-ok#?,ok#?
+felix,ok
+louis,ok
