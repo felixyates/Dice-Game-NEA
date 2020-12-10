@@ -1,2 +1,8 @@
 player1,password
 player2,password
+felix,ok
+louis,ok
+test,poggers
+password,?-
+felix2,hm
+username,password
