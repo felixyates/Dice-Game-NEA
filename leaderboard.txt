@@ -17,3 +17,7 @@ felix,61
 felix2,42
 felix,51
 felix,80
+player1,53
+player2,64
+player1,56
+player2,58

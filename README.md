@@ -9,8 +9,8 @@ This is my take on the OCR Dice Game NEA.
 - [x] Sound effects and music! Not strictly necessary but fun.
 
 ## To Do (?)
-- Allow for the creation of new user accounts, the details of which will be stored in an SQL database. This will take a while.
-- Store highscores in said SQL database and then display these in a leaderboard format. This will also take a long time.
+- Allow for the creation of new user accounts, the details of which will be stored in a file.
+- Store highscores in a file and then display these in a leaderboard format.
 
 ## Rules
 Each player will roll two dice at the start of each round, the total of which will be added to their score. If the total is even, they'll gain 10 points, but if it's odd, they'll lose 5 points (their score won't go below 0, though). If they score a double, they roll again, and the value of the dice will be added to their score. At the end of 5 rounds, if it's a tie, each player will roll one dice each until one of the players scores more.

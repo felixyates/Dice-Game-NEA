@@ -2,47 +2,54 @@ import random
 import time
 from replit import audio
 
-## (C) Felix Yates 2020. More information available in README.md
-
 # These are global sleep timings. Change these to 0 when testing.
 # Default values can also be found below to change back to.
 
-global ssSleep # supershort sleep, default - 1.5 seconds
-global sSleep # short sleep, default - 2 seconds
-global mSleep # medium sleep, default - 5 seconds
-global lSleep # long sleep, default - 8 seconds
+global ssSleep  # supershort sleep, default - 1.5 seconds
+global sSleep  # short sleep, default - 2 seconds
+global mSleep  # medium sleep, default - 5 seconds
+global lSleep  # long sleep, default - 8 seconds
 ssSleep = 1.5
 sSleep = 2
 mSleep = 5
 lSleep = 8
 
+# This is the amount of rounds you want to play
+# The default (and project requirement) is 5, but you can lower it to speed up the game.
+## WARNING: IT WILL PROBABLY BREAK STUFF!
+
+global totalrounds
+totalrounds = 5
+
+# Audio functions
 
 def drumRoll():
     try:
-      audio.play_file("drumRoll.mp3")
+        audio.play_file("drumRoll.mp3")
     except TimeoutError:
-      pass
+        pass
 
 
 def cheer():
     try:
-      audio.play_file("cheer.mp3")
+        audio.play_file("cheer.mp3")
     except TimeoutError:
-      pass
+        pass
 
 
 def music():
     try:
-      global source
-      source = audio.play_file("wiiParty.mp3")
-      audio.play_file("cheer.mp3")
-      source.volume = 0.25
-      source.set_loop(-1)
+        global source
+        source = audio.play_file("wiiParty.mp3")
+        audio.play_file("cheer.mp3")
+        source.volume = 0.25
+        source.set_loop(-1)
     except TimeoutError:
-      pass
+        pass
 
+# Game functions
 
-def leaderboardDisplay():
+def leaderboardDisplay(): # Reads, sorts, and then displays the leaderboard
     with open("leaderboard.txt", "r") as ldbFile:
         ldbFile = ldbFile.readlines()
         print("-" * 10 + "\n")
@@ -75,33 +82,43 @@ def leaderboardDisplay():
         print("-" * 10 + "\n")
 
 
-def auth(playerNumber):
+def auth(playerNumber): # Player authentication
     valid = False
     exists = False
-    usernameInput = input(f"Enter your username, Player {playerNumber}: ")
+    print(f"Enter your username, Player {playerNumber}.")
+    usernameInput = input("If you do not have an account, pick a username instead: ")
     players = getPlayers()
     exists = doesExist(usernameInput)
     if exists == False:
-      while exists == False:
-        createAccount = input(f"That account ({usernameInput}) does not exist. Would you like to create a new account? (Y/N) ").lower()
-        if createAccount == 'y' or 'yes':
-          accountCreator(playerNumber)
-        else:
-          auth(playerNumber)
-    
-    for i in range(len(players)):
-      if str(players[i][0]) == usernameInput:
-        username = usernameInput
-        password = str(players[i][1])
-    
-    if playerNumber == 1:
-      global p1Username
-      p1Username = username
-    elif playerNumber == 2:
-      global p2Username
-      p2Username = username
+        while exists == False:
+            createAccount = input(
+                f"\nThat account ({usernameInput}) does not exist.\nWould you like to create a new account? (Y/N) "
+            ).lower()
+            createAccount = isValid(createAccount)
+            if createAccount == True:
+                exists = True
+                print("\n")
+                accountCreator(playerNumber)
+            elif createAccount == False:
+                exists = True
+                print("\n")
+                auth(playerNumber)
 
-    passwordInput = input("Now the password: ")
+    players = getPlayers()
+
+    for i in range(len(players)):
+        if str(players[i][0]) == usernameInput:
+            username = usernameInput
+            password = str(players[i][1])
+
+    if playerNumber == 1:
+        global p1Username
+        p1Username = username
+    elif playerNumber == 2:
+        global p2Username
+        p2Username = username
+
+    passwordInput = input("Now enter the password: ")
     while valid != True:
         if (usernameInput == username) and (passwordInput == password):
             valid = True
@@ -112,82 +129,48 @@ def auth(playerNumber):
             if passwordInput != password:
                 passwordInput = input("Password incorrect. Please try again: ")
 
-def getPlayers():
-  players = []
-  with open('players.txt', 'r') as existingPlayers:
-    existingPlayers = existingPlayers.readlines()
-    for i in range(len(existingPlayers)):
-      players.append(str(existingPlayers[i]).split(","))
-      players[i][1] = players[i][1].strip()
-  return players
 
-def doesExist(usernameInput):
-  exists = False
-  players = getPlayers()
-  for i in range(len(players)):
-    if str(players[i][0]) == usernameInput:
-      exists = True
-      return True
-    
-  if exists == False:
-    return False
-    
-
-def accountChecker(playerNumber):
-    valid = False
-    if playerNumber == 1:
-        hasAccount = input(
-            f"Welcome, Player {playerNumber}! Do you have an account? (Y/N) "
-        ).lower()
-    elif playerNumber == 2:
-        hasAccount = input(
-            f"Excellent! And what about you, Player {playerNumber}? (Y/N) "
-        ).lower()
-
-    if hasAccount == "y" or hasAccount == "yes":
-        if playerNumber == 1:
-            accountChecker(2)
-        elif playerNumber == 2:
-            startGame()
-
-    elif hasAccount == "n" or hasAccount == "no":
-        accountCreator(playerNumber)
-    else:
-        valid = False
-        while valid != True:
-            hasAccount = input("Please enter either 'Y' or 'N': ").lower()
-            if hasAccount == 'y' or hasAccount == 'yes':
-                valid = True
-                if playerNumber == 1:
-                    accountChecker(2)
-                elif playerNumber == 2:
-                    print(
-                        "\nPerfect! Now we'll just sign you in and get playing...\n"
-                    )
-                    for i in range(2):
-                        auth(i + 1)
-            elif hasAccount == 'n' or hasAccount == 'no':
-                valid = True
-                accountCreator(playerNumber)
+def getPlayers(): # Grabs playerlist from 'players.txt', appends to 'players' list
+    players = []
+    with open('players.txt', 'r') as existingPlayers:
+        existingPlayers = existingPlayers.readlines()
+        for i in range(len(existingPlayers)):
+            players.append(str(existingPlayers[i]).split(","))
+            players[i][1] = players[i][1].strip()
+    return players
 
 
-def accountCreator(playerNumber):
+def doesExist(usernameInput): # Checks whether a player exists within the 'players' list
+    exists = False
+    players = getPlayers()
+    for i in range(len(players)):
+        if str(players[i][0]) == usernameInput:
+            exists = True
+            return True
+
+    if exists == False:
+        return False
+
+
+def accountCreator(playerNumber): # Creates an account for the player
     loop = True
     valid = False
-    print("That's OK! I'll get one set up for you right away.")
+    print("I'll get one set up for you right away.")
     time.sleep(sSleep)
     newUsername = input(
         "\nFirst, pick a username.\nRemember, this will appear on the leaderboard, so keep it clean! "
     )
 
     while loop != False:
-      exists = doesExist(newUsername)
-      if exists == True:
-        newUsername = input(f"Uh oh, that username ({newUsername}) already exists. Try another one: ")
-      elif exists == False:
-        loop = False
+        exists = doesExist(newUsername)
+        if exists == True:
+            newUsername = input(
+                f"Uh oh, that username ({newUsername}) already exists. Try another one: "
+            )
+        elif exists == False:
+            loop = False
 
-    newPassword = input("Now pick a password. Make sure you remember it! ")
+    newPassword = input("\nNow pick a password. Make sure you remember it! ")
     while valid == False:
         if newPassword == "":
             newPassword = input("Password cannot be blank. Try again: ")
@@ -195,19 +178,33 @@ def accountCreator(playerNumber):
             valid = True
 
     with open('players.txt', 'a') as playersFile:
-      playersFile.write(newUsername+","+newPassword+"\n")
-      print(f"Your account was successfully set up.\n")
-    if playerNumber == 1:
-      accountChecker(2)
+        playersFile.write(newUsername + "," + newPassword + "\n")
+        print("Your account was successfully set up.\n")
+
+def isValid(inVar):
+    # Checks if an input equals 'y', 'yes', 'n' or 'no', keeps in loop otherwise
+    # If input is 'y' or 'yes', returns True
+    # If input is 'n' or 'no', returns False
+    inVar = inVar.lower()
+    if inVar == "y" or inVar == "yes" or inVar == "n" or inVar == "no":
+        valid = True
     else:
-      startGame()
+        valid = False
 
-def isValid(): # need to write
-  ## Checks if an input equals 'y', 'yes', 'n' or 'no', keeps in loop otherwise
-  print("Need to write this!!")
+    while valid == False:
+        inVar = input("Please enter either 'Y' or 'N': ").lower()
+        if inVar == "y" or inVar == "yes" or inVar == "n" or inVar == "no":
+            valid = True
+        else:
+            valid = False
+
+    if inVar == 'y' or inVar == 'yes':
+        return True
+    elif inVar == 'n' or inVar == 'no':
+        return False
 
 
-def tutorialQuestion():
+def tutorialQuestion(): # Checks if player wants to go through the tutorial
     music()
     time.sleep(sSleep)
     print("\nWelcome to un-named dice rolling game!")
@@ -222,26 +219,15 @@ def tutorialQuestion():
         "Final thing - would you like to go through the tutorial? (Y/N) "
     ).lower()
 
-    if answer == "y" or answer == "yes":
+    answer = isValid(answer)
+
+    if answer == True:
         tutorial()
-    elif answer == "n" or answer == "no":
+    elif answer == False:
         print("Alright then, let's get this show on the road!")
-        time.sleep(ssSleep)
-    else:
-        valid = False
-        while valid == False:
-            answer = input(
-                "Invalid - please enter either 'Y' or 'N': ").lower()
-            if answer == "y" or answer == "yes":
-                valid = True
-                tutorial()
-            elif answer == "n" or answer == "no":
-                valid = True
-                print("Alright, let's get this show on the road!")
-                time.sleep(ssSleep)
 
 
-def tutorial():
+def tutorial(): # Displays the tutorial as written in 'tutorial.txt'
     with open("tutorial.txt", 'r') as file:
         print("\n")
         tutorial = file.readlines()
@@ -252,20 +238,22 @@ def tutorial():
             i += 1
     print("\n")
 
-def startGame():
-  print("\nPerfect! Now we'll just sign you in and get playing...\n")
-  for i in range(2):
-    auth(i + 1)
-  print("Correct! On with the game :)")
-  tutorialQuestion()
-  game()
 
-def game():
+def startGame(): # All the starting code of the game
+    for i in range(2):
+        auth(i + 1)
+        print("\n")
+    print("Correct! On with the game :)")
+    tutorialQuestion()
+    game()
+
+
+def game(): # The main game code (total scores, round management)
     rounds = 0
     p1Score = 0
     p2Score = 0
 
-    while rounds < 5:
+    while rounds < totalrounds:
         p1Score = roll(1, p1Score)
         p2Score = roll(2, p2Score)
         rounds = rounds + 1
@@ -284,7 +272,7 @@ def game():
     gameEnd(p1Score, p2Score)
 
 
-def roll(currentPlayer, score):
+def roll(currentPlayer, score): # Rolls dice and returns score
     i = currentPlayer
     print("\nPlayer", str(i) + ", you're up! Press ENTER to roll.", end=" ")
     input()
@@ -321,7 +309,7 @@ def roll(currentPlayer, score):
     return score
 
 
-def gameEnd(p1Score, p2Score):
+def gameEnd(p1Score, p2Score): # Endgame sequence (displays winner, new leaderboard)
     time.sleep(sSleep)
     if p1Score != p2Score:
         print(f"{p1Username} got...  ", end="")
@@ -349,7 +337,7 @@ def gameEnd(p1Score, p2Score):
     time.sleep(sSleep)
 
 
-def tieChk(p1Score, p2Score):
+def tieChk(p1Score, p2Score): # Checks if scores are a tie, keeps rolling until tie broken.
     tie = False
     if p1Score == p2Score:
         print(
@@ -374,9 +362,11 @@ def leaderboard(winner, p1Score, p2Score):
     with open("leaderboard.txt", "a") as ldbFile:
         ldbFile.write(p1Username + "," + str(p1Score) + "\n")
         ldbFile.write(p2Username + "," + str(p2Score) + "\n")
-        print("I've added your scores to the leaderboard! Are you in the top 5?")
+        print(
+            "I've added your scores to the leaderboard! Are you in the top 5?")
     leaderboardDisplay()
+
 
 ## MAIN CODE
 
-accountChecker(1)
+startGame()
