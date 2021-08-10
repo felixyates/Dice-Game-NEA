@@ -30,4 +30,5 @@ As of late, the only required dependency is replit, which provides the audio mod
   * diceRoll.mp3 - Epidemic Sound
   * cheer.mp3 - Epidemic Sound
 
-You may not modify, resell or redistribute this software. It is provided "AS IS" and without warranty or guarantee.
+Note: the Epidemic Sound sound effects are not included in the project for copyright reasons. You must find and use your own.
+You can use bits of the code, but if you do please be respectful- give credit where it's due and don't just copy and paste it. 
